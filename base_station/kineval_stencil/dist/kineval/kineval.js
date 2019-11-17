@@ -508,22 +508,29 @@ kineval.robotDraw = function drawRobot() {
         var target_mat = new THREE.Matrix4().multiplyMatrices(trans, three_d_rot)
 
     } else {
-        // var target_mat = matrix_mathjs_to_threejs(
-        //                     generate_translation_matrix(
-        //                         kineval.params.ik_target.position[0][0],
-        //                         kineval.params.ik_target.position[1][0],
-        //                         kineval.params.ik_target.position[2][0]));
+        var three_d_rot = new THREE.Matrix4().makeRotationX(kineval.params.ik_target.orientation[0])
+        three_d_rot.multiply(new THREE.Matrix4().makeRotationY(kineval.params.ik_target.orientation[1]))
+        three_d_rot.multiply(new THREE.Matrix4().makeRotationZ(kineval.params.ik_target.orientation[2]))
 
-        var target_mat = new THREE.Matrix4().makeTranslation(kineval.params.ik_target.position[0][0],
-                                                            kineval.params.ik_target.position[1][0],
-                                                            kineval.params.ik_target.position[2][0]);
+        var trans = new THREE.Matrix4().makeTranslation(kineval.params.ik_target.position[0][0],
+                                                    kineval.params.ik_target.position[1][0],
+                                                    kineval.params.ik_target.position[2][0])
+
+        var target_mat = new THREE.Matrix4().multiplyMatrices(trans, three_d_rot)
         simpleApplyMatrix(target_geom,target_mat);
-
+        simpleApplyMatrix(cart_controller_x1_pos,target_mat);
+        simpleApplyMatrix(cart_controller_y1_pos,target_mat);
+        simpleApplyMatrix(cart_controller_z1_pos,target_mat);
     }
     
+
+
     textbar.innerHTML = kineval.params.ik_target.position[0][0].toString()
     textbar.innerHTML += " " + kineval.params.ik_target.position[1][0].toString()
     textbar.innerHTML += " " + kineval.params.ik_target.position[2][0].toString()
+    textbar.innerHTML += " (" + kineval.params.ik_target.orientation[0].toString()
+    textbar.innerHTML += ", " + kineval.params.ik_target.orientation[1].toString()
+    textbar.innerHTML += ", " + kineval.params.ik_target.orientation[2].toString() + ")"
     
     } // hacked for stencil
 
@@ -742,6 +749,11 @@ kineval.initScene = function initScene() {
     cart_lines.push(cart_controller_x_pos);
     cart_controller_x_pos.visible = true;
 
+    cart_controller_x1_pos = new THREE.Line(cart_controller_x_pos_geom, red)
+    scene.add(cart_controller_x1_pos);
+    cart_lines.push(cart_controller_x1_pos);
+    cart_controller_x1_pos.visible = true;
+
     var cart_controller_y_pos_geom = new THREE.Geometry();
     cart_controller_y_pos_geom.vertices.push(
         new THREE.Vector3(0,0,0),
@@ -752,6 +764,11 @@ kineval.initScene = function initScene() {
     cart_lines.push(cart_controller_y_pos);
     cart_controller_y_pos.visible = true;
 
+    cart_controller_y1_pos = new THREE.Line(cart_controller_y_pos_geom, grn)
+    scene.add(cart_controller_y1_pos);
+    cart_lines.push(cart_controller_y1_pos);
+    cart_controller_y1_pos.visible = true;
+
     var cart_controller_z_pos_geom = new THREE.Geometry();
     cart_controller_z_pos_geom.vertices.push(
         new THREE.Vector3(0,0,0),
@@ -761,6 +778,11 @@ kineval.initScene = function initScene() {
     scene.add(cart_controller_z_pos);
     cart_lines.push(cart_controller_z_pos);
     cart_controller_z_pos.visible = true;
+
+    cart_controller_z1_pos = new THREE.Line(cart_controller_z_pos_geom, blu)
+    scene.add(cart_controller_z1_pos);
+    cart_lines.push(cart_controller_z1_pos);
+    cart_controller_z1_pos.visible = true;
 
     var cart_controller_x_neg_geom = new THREE.Geometry();
     cart_controller_x_neg_geom.vertices.push(
@@ -843,12 +865,23 @@ kineval.initGUIDisplay = function initGUIDisplay () {
 
     var dummy_object = {};
     dummy_object.send_target_point = function() {
+        
+        var three_d_rot = new THREE.Matrix4().makeRotationX(kineval.params.ik_target.orientation[0])
+        three_d_rot.multiply(new THREE.Matrix4().makeRotationY(kineval.params.ik_target.orientation[1]))
+        three_d_rot.multiply(new THREE.Matrix4().makeRotationZ(kineval.params.ik_target.orientation[2]))
+
+        var alph = Math.atan2(three_d_rot.elements[2], -(three_d_rot.elements[6]));
+        var bet = Math.acos(three_d_rot.elements[10]);
+        var gam = Math.atan2(three_d_rot.elements[8], three_d_rot.elements[9]);
 
         var TargetPointMsg =  {
             'type': 'TargetPoint',
             'x': kineval.params.ik_target.position[0][0],
             'y': -1 * kineval.params.ik_target.position[2][0],
             'z': kineval.params.ik_target.position[1][0],
+            'alpha': alph,
+            'beta': bet,
+            'gamma': gam,
         }
 
         kineval.publish('/target_point', TargetPointMsg)

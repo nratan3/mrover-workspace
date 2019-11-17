@@ -47,7 +47,7 @@
     methods: {
       send_message: function () {
       console.log(this.channel_name);
-      this.lcm_.publish(this.channel_name, JSON.parse(this.message_text))  
+      this.lcm_.publish(this.channel_name, this.message_text)  
       }
     },
 
@@ -65,11 +65,6 @@
         },
         // Subscribed LCM message received
         (msg) => {
-          if (this.viewing[msg.topic]){
-            this.updateScroll()
-            this.messages.push(msg.message)
-            this.messages = this.messages.slice(-100)
-          }
         },
         // Subscriptions
         this.subscriptions

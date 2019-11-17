@@ -4,4 +4,7 @@ struct TargetPoint {
     float x;
     float y;
     float z;
+    float alpha;
+    float beta;
+    float gamma;
 }
