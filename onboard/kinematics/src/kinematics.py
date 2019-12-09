@@ -93,13 +93,13 @@ class KinematicsSolver:
         cur_robot.ef_pos_world = ef_pos_world[:-1]
         return ef_pos_world[:-1]
 
-    def IK(self, target_point, set_random_angles):
+    def IK(self, target_orientation, set_random_angles):
         '''
             Inverse kinematics for MRover arm using cyclic
             coordinate descent (CCD)
 
             Params:
-                target_point (np.array([x, y, z])): target point in 3d space
+                target_orientation (np.array([x, y, z])): target orientation in 3d space
                     for end effector
                 set_random_angles: asks solver to set joint angles to random
                     angles. Used to escape local minima
@@ -116,7 +116,7 @@ class KinematicsSolver:
 
         '''
         num_iterations = 0
-        self.target_pos_world = target_point
+        self.target_pos_world = target_orientation
         self.FK(self.robot_state)
         self.robot_ik = copy.deepcopy(self.robot_state)
         links = self.robot_ik.all_links

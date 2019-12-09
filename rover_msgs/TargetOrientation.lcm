@@ -1,6 +1,6 @@
 package rover_msgs;
 
-struct TargetPoint {
+struct TargetOrientation {
     float x;
     float y;
     float z;

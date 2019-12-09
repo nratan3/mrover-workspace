@@ -50,14 +50,15 @@ kineval.handleKeydown = function handle_keydown(keycode) {
         console.log('trying to grasp');
         break;
     case 49: // send IK target with '1' key
-        var TargetPointMsg =  {
-            'type': 'TargetPoint',
+        var TargetOrientationMsg =  {
+            'type': 'TargetOrientation',
             'x': kineval.params.ik_target.position[0][0],
             'y': -1 * kineval.params.ik_target.position[2][0],
             'z': kineval.params.ik_target.position[1][0],
+            
         }
 
-        kineval.publish('/target_point', TargetPointMsg)
+        kineval.publish('/target_orientation', TargetOrientationMsg)
         break;
     case 50: // send preview command with '2' key
         var MotionExecuteMsg = {
@@ -210,17 +211,6 @@ kineval.handleUserInput = function user_input() {
         textbar.innerHTML = "moving IK target backward";
         kineval.params.ik_target.position[2][0] += 0.02;
     }
-    // if ( keyboard.pressed("1") ) {
-    //     textbar.innerHTML = "publish target point";
-    //     var TargetPointMsg =  {
-    //         'type': 'TargetPoint',
-    //         'x': kineval.params.ik_target.position[0][0],
-    //         'y': -1 * kineval.params.ik_target.position[2][0],
-    //         'z': kineval.params.ik_target.position[1][0],
-    //     }
-
-    //     kineval.publish('/target_point', TargetPointMsg)
-    // }
     if (keyboard.pressed("g")) {
         textbar.innerHTML = "pose setpoints printed to console";
         console.log(JSON.stringify(kineval.setpoints));
