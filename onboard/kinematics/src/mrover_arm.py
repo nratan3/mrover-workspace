@@ -83,8 +83,8 @@ class MRoverArm:
         self.enable_execute = False
         logger.info('Got a target point.')
 
-        point = np.array([point_msg.x, point_msg.y, point_msg.z, 
-                            point_msg.alpha, point_msg.beta, point_msg.gamma])
+        point = np.array([point_msg.x, point_msg.y, point_msg.z,
+                          point_msg.alpha, point_msg.beta, point_msg.gamma])
         print('Point: {}'.format(point))
         print(self.state.angles)
         success = False

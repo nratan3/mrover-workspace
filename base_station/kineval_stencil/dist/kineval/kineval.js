@@ -328,7 +328,7 @@ kineval.publish_joint_angles = function publish_joint_angles() {
         'joint_b': robot.joints['joint_b'].angle,
         'joint_c': robot.joints['joint_c'].angle,
         'joint_d': robot.joints['joint_d'].angle,
-        'joint_e': robot.joints['joint_e'].angle,
+        'joint_e': robot.joints['joint_e'].angle
     }
     kineval.publish('/ik_ra_control', ArmPositionMsg)
 }
@@ -871,9 +871,12 @@ kineval.initGUIDisplay = function initGUIDisplay () {
             'x': kineval.params.ik_target.position[0][0],
             'y': -1 * kineval.params.ik_target.position[2][0],
             'z': kineval.params.ik_target.position[1][0],
-            'alpha': alph,
-            'beta': bet,
-            'gamma': gam,
+            // 'alpha': alph,
+            // 'beta': bet,
+            // 'gamma': gam,
+            'alpha': 0,
+            'beta': 0,
+            'gamma': 0,
         }
 
         kineval.publish('/target_orientation', TargetOrientationMsg)
