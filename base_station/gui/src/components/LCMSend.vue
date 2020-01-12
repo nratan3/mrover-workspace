@@ -164,11 +164,6 @@
         },
         // Subscribed LCM message received
         (msg) => {
-          if (this.viewing[msg.topic]){
-            this.updateScroll()
-            this.messages.push(msg.message)
-            this.messages = this.messages.slice(-100)
-          }
         },
         // Subscriptions
         this.subscriptions
